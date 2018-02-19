@@ -2,6 +2,7 @@ import mechanize
 import re
 import requests
 import time
+import random
 
 def saveEmail(email):
   file = open('emailCreation.txt','w')
@@ -11,7 +12,40 @@ def saveEmail(email):
 def openEmail():
   file = open('emailCreation.txt','r')
   email = file.read()
+  file.close()
   return email
+
+def getRandomName():
+  global randomLastName
+  global randomFirstName
+  global postalCode
+  file = open('firstnames.txt','r')
+  randomFirstName = random_line(file)
+  m = re.match(r"(^[^\t\s]+)",randomFirstName)
+  randomFirstName = str.lower(m.group(1))
+  print randomFirstName
+  file.close()
+  file = open('surnames.txt','r')
+  randomLastName = random_line(file)
+  randomLastName = randomLastName.rstrip()
+  print randomLastName
+  file.close()
+  file = open('postalcodes.txt','r')
+  postalCode = random_line(file)
+  postalCode = postalCode.rstrip()
+  file.close()
+  print postalCode
+
+####
+# Below function is not mine and was lifted from:
+# https://stackoverflow.com/questions/3540288/how-do-i-read-a-random-line-from-one-file-in-python
+####
+def random_line(afile):
+    line = next(afile)
+    for num, aline in enumerate(afile):
+      if random.randrange(num + 2): continue
+      line = aline
+    return line
 
 def select_form(form):
   return form.attrs.get('id', None) == 'gform_7'
@@ -19,11 +53,11 @@ def select_form(form):
 def submitForm(br,email):
   br.select_form(predicate=select_form)
   br.form.set_all_readonly(False)
-  br.form['input_1'] = 'Edward'
-  br.form['input_3'] = 'Broxane'
+  br.form['input_1'] = randomFirstName
+  br.form['input_3'] = randomLastName
   br.form['input_14'] = email
   br.form['input_15'] = email
-  br.form['input_9'] = 'M1S 2H5'
+  br.form['input_9'] = postalCode
   br.find_control("input_18.1").items[0].selected=True
   br.submit(id='gform_submit_button_7')
 
@@ -43,11 +77,11 @@ def parseEmailContent():
   print email
   m = re.match(r"^([^\@]+)",email)
   user = m.group(1)
- 
   payload = {'f':'set_email_user', 'email_user': user}
   req = s.post('http://api.guerrillamail.com/ajax.php', data=payload)
   print req.text
-
+  
+  time.sleep(60)
   payload = {'f':'check_email','seq':'0'}
   req = s.get('http://api.guerrillamail.com/ajax.php', params=payload)
   print req.text
@@ -89,4 +123,8 @@ def createSharklasersEmail():
   saveEmail(email)
 
 
+#parseEmailContent()
+getRandomName()
+createSharklasersEmail()
+connectSirius()
 parseEmailContent()
