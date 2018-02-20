@@ -1,0 +1,18 @@
+################ 
+Created by: Chris Richards
+Licensed under MIT
+
+Tested and working with version: Python 2.7.5
+
+dependencies:
+
+Mechanize plugin. For RedHat/CentOS
+
+yum install python-pip
+pip install -U multi-mechanize
+
+Instructions:
+
+1. Change directories to location of files
+2. ./run.sh
+3. Enjoy
