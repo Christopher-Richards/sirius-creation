@@ -80,28 +80,29 @@ def parseEmailContent():
   payload = {'f':'set_email_user', 'email_user': user}
   req = s.post('http://api.guerrillamail.com/ajax.php', data=payload)
   print req.text
-  
-  time.sleep(60)
+
   payload = {'f':'check_email','seq':'0'}
   req = s.get('http://api.guerrillamail.com/ajax.php', params=payload)
   print req.text
 
   #187028583
-  m = re.match(r"^.+\[\{\"mail_id\"\:\"([^\"]+).+\"mail_from\"\:\"([^\"]+)",req.text)
-  mail_id = m.group(1)
-  mail_from = m.group(2)
-
   while True:
-    if "siriusxm.ca" not in mail_from:
+    if "siriusxm.ca" not in req.text:
+      payload = {'f':'check_email','seq':'0'}
+      req = s.get('http://api.guerrillamail.com/ajax.php', params=payload)
       time.sleep(20)
       continue
     else:
       break
-  
+
+  m = re.match(r"^.+\[\{\"mail_id\"\:\"([^\"]+).+\"mail_from\"\:\"([^\"]+)",req.text)
+  mail_id = m.group(1)
+  mail_from = m.group(2)
+
   payload = {'f':'fetch_email','email_id':mail_id}
   req = s.get('http://api.guerrillamail.com/ajax.php', params=payload)
   print req.text
-  
+
   m = re.match(r".+Username\s+\\\/\s+Nom d'utilisateur\:\s+([^\r\n\s]+).+Password\s+\\\/\s+Mot de passe\:\s+([^\r\n\s]+)",req.text)
   email = m.group(1)
   password = m.group(2)
@@ -111,7 +112,7 @@ def parseEmailContent():
   file.write("\n")
   file.write(password)
   file.close()
-  
+
 def createSharklasersEmail():
   s = requests.session()
   payload = {'f':'get_email_address'}
@@ -122,6 +123,9 @@ def createSharklasersEmail():
   email = m.group(1)
   saveEmail(email)
 
+  payload = {'f':'check_email','seq':'0'}
+  req = s.get('http://api.guerrillamail.com/ajax.php', params=payload)
+  print req.text
 
 #parseEmailContent()
 getRandomName()
