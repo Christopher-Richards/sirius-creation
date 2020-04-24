@@ -19,6 +19,7 @@ def getRandomName():
   global randomLastName
   global randomFirstName
   global postalCode
+  global randomNumber
   file = open('firstnames.txt','r')
   randomFirstName = random_line(file)
   m = re.match(r"(^[^\t\s]+)",randomFirstName)
@@ -35,6 +36,11 @@ def getRandomName():
   postalCode = postalCode.rstrip()
   file.close()
   print postalCode
+  file = open('randomnumbers.txt','r')
+  randomNumber = random_line(file)
+  randomNumber = randomNumber.rstrip()
+  print randomNumber
+  file.close()
 
 ####
 # Below function is not mine and was lifted from:
@@ -129,6 +135,6 @@ def createSharklasersEmail():
 
 #parseEmailContent()
 getRandomName()
-createSharklasersEmail()
-connectSirius()
-parseEmailContent()
+#createSharklasersEmail()
+#connectSirius()
+#parseEmailContent()
