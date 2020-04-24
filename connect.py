@@ -59,13 +59,13 @@ def select_form(form):
 def submitForm(br,email):
   br.select_form(predicate=select_form)
   br.form.set_all_readonly(False)
-  br.form['input_1'] = randomFirstName
-  br.form['input_3'] = randomLastName
-  br.form['input_14'] = email
-  br.form['input_15'] = email
-  br.form['input_9'] = postalCode
-  br.find_control("input_18.1").items[0].selected=True
-  br.submit(id='gform_submit_button_7')
+  br.form['frmHome_tbxFirstName'] = randomFirstName
+  br.form['frmHome_tbxLastName'] = randomLastName
+  br.form['frmHome_tbxEmail'] = email
+  br.form['frmHome_tbxPhone'] = randomNumber
+  br.form['frmHome_tbxZip'] = postalCode
+  #br.find_control("input_18.1").items[0].selected=True
+  br.submit(id='frmHome_btnNext')
 
 def connectSirius():
   br = mechanize.Browser()
