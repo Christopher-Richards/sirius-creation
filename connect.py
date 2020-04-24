@@ -121,11 +121,11 @@ def parseEmailContent():
 
 def createSharklasersEmail():
   s = requests.session()
-  payload = {'f':'get_email_address'}
+  payload = {'f':'set_email_user', 'email_user': randomFirstName}
   req = s.get('http://api.guerrillamail.com/ajax.php', params=payload)
   print req.text #prints out the current email address
 
-  m = re.match(r"\{\"email_addr\"\:\"([^\@]+\@[^\"]+)",req.text)
+  m = re.match(r"\{.+\"email_addr\"\:\"([^\@]+\@[^\"]+)",req.text)
   email = m.group(1)
   saveEmail(email)
 
@@ -135,6 +135,6 @@ def createSharklasersEmail():
 
 #parseEmailContent()
 getRandomName()
-#createSharklasersEmail()
+createSharklasersEmail()
 #connectSirius()
 #parseEmailContent()
